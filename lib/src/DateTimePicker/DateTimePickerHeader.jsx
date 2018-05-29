@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import withStyles from '@material-ui/core/styles/withStyles';
 import PickerToolbar from '../_shared/PickerToolbar';
 import ToolbarButton from '../_shared/ToolbarButton';
@@ -9,7 +10,7 @@ import * as viewType from '../constants/date-picker-view';
 export const DateTimePickerHeader = (props) => {
   const {
     date, classes, openView, meridiemMode, onOpenViewChange, setMeridiemMode,
-    theme, utils, ampm,
+    theme, utils, ampm, seconds,
   } = props;
 
   const changeOpenView = view => () => onOpenViewChange(view);
@@ -37,42 +38,83 @@ export const DateTimePickerHeader = (props) => {
         />
       </div>
 
-      <div className={classes.timeHeader}>
+      <div
+        className={classnames(classes.timeHeader, {
+          [classes.timeHeaderWithSeconds]: seconds,
+          [classes.timeHeaderWithoutAmPm]: !ampm,
+        })}
+      >
         <div className={hourMinuteClassName}>
           <ToolbarButton
-            variant="display2"
+            variant={seconds ? 'display1' : 'display2'}
             onClick={changeOpenView(viewType.HOUR)}
             selected={openView === viewType.HOUR}
             label={utils.getHourText(date, ampm)}
           />
 
           <ToolbarButton
-            variant="display2"
+            variant={seconds ? 'display1' : 'display2'}
             label=":"
             selected={false}
             className={classes.separator}
           />
 
           <ToolbarButton
-            variant="display2"
+            variant={seconds ? 'display1' : 'display2'}
             onClick={changeOpenView(viewType.MINUTES)}
             selected={openView === viewType.MINUTES}
             label={utils.getMinuteText(date)}
           />
+
+          {
+            seconds &&
+              <Fragment>
+                <ToolbarButton
+                  variant="display1"
+                  label=":"
+                  selected={false}
+                  className={classes.separator}
+                />
+                <ToolbarButton
+                  variant="display1"
+                  onClick={changeOpenView(viewType.SECONDS)}
+                  selected={openView === viewType.SECONDS}
+                  label={utils.getSecondText(date)}
+                />
+              </Fragment>
+          }
         </div>
 
         {
           ampm &&
-            <div className={classes.ampmSelection}>
+            <div
+              className={classnames({
+                [classes.ampmSelectionWithSeconds]: seconds,
+                [classes.ampmSelection]: !seconds,
+              })}
+            >
               <ToolbarButton
-                className={classes.ampmLabel}
+                className={classnames(classes.ampmLabel, {
+                  [classes.ampmLabelWithSeconds]: seconds,
+                })}
                 selected={meridiemMode === 'am'}
                 type="subheading"
                 label={utils.getMeridiemText('am')}
                 onClick={setMeridiemMode('am')}
               />
+              {
+                seconds &&
+                  <ToolbarButton
+                    className={classnames(classes.ampmLabel, {
+                      [classes.ampmLabelWithSeconds]: seconds,
+                    })}
+                    label=" / "
+                  />
+              }
               <ToolbarButton
-                className={classes.ampmLabel}
+                className={classnames(classes.ampmLabel, {
+                    [classes.ampmLabelWithSeconds]: seconds,
+                })}
                 selected={meridiemMode === 'pm'}
                 type="subheading"
                 label={utils.getMeridiemText('pm')}
@@ -95,10 +137,12 @@ DateTimePickerHeader.propTypes = {
   setMeridiemMode: PropTypes.func.isRequired,
   utils: PropTypes.object.isRequired,
   ampm: PropTypes.bool,
+  seconds: PropTypes.bool,
 };
 
 DateTimePickerHeader.defaultProps = {
   ampm: true,
+  seconds: false,
 };
 
 const styles = () => ({
@@ -117,8 +161,15 @@ const styles = () => ({
     marginLeft: 10,
     marginRight: -10,
   },
+  ampmSelectionWithSeconds: {
+    marginLeft: 3,
+    alignSelf: 'flex-start',
+  },
   ampmLabel: {
     fontSize: 18,
+  },
+  ampmLabelWithSeconds: {
+    display: 'inline',
   },
   hourMinuteLabel: {
     display: 'flex',
@@ -139,6 +190,12 @@ const styles = () => ({
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
+  },
+  timeHeaderWithSeconds: {
+    flexDirection: 'column-reverse',
+  },
+  timeHeaderWithoutAmPm: {
+    justifyContent: 'flex-start',
   },
 });
 

@@ -53,6 +53,8 @@ export class DateTimePickerWrapper extends PickerBase {
     openTo: PropTypes.oneOf(['year', 'date', 'hour', 'minutes']),
     /** Switching hour/minutes animation timeout in milliseconds (set 0 to disable) */
     fadeTimeout: PropTypes.number,
+    /** Show the seconds view */
+    seconds: PropTypes.bool,
   }
 
   static defaultProps = {
@@ -75,6 +77,7 @@ export class DateTimePickerWrapper extends PickerBase {
     shouldDisableDate: undefined,
     animateYearScrolling: false,
     fadeTimeout: 400,
+    seconds: false,
   }
 
   default12hFormat = 'MMMM Do hh:mm a'
@@ -104,6 +107,7 @@ export class DateTimePickerWrapper extends PickerBase {
       shouldDisableDate,
       animateYearScrolling,
       fadeTimeout,
+      seconds,
       ...other
     } = this.props;
 
@@ -143,6 +147,7 @@ export class DateTimePickerWrapper extends PickerBase {
           fadeTimeout={fadeTimeout}
           shouldDisableDate={shouldDisableDate}
           animateYearScrolling={animateYearScrolling}
+          seconds={seconds}
         />
       </ModalWrapper>
     );

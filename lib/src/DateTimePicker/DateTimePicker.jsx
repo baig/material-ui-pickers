@@ -7,6 +7,7 @@ import YearSelection from '../DatePicker/YearSelection';
 import Calendar from '../DatePicker/Calendar';
 import HourView from '../TimePicker/HourView';
 import MinutesView from '../TimePicker/MinutesView';
+import SecondsView from '../TimePicker/SecondsView';
 import DateTimePickerTabs from './DateTimePickerTabs';
 import DatetimePickerHeader from './DateTimePickerHeader';
 import { convertToMeridiem } from '../_helpers/time-utils';
@@ -37,6 +38,7 @@ export class DateTimePicker extends Component {
     animateYearScrolling: PropTypes.bool,
     fadeTimeout: PropTypes.number.isRequired,
     classes: PropTypes.object.isRequired,
+    seconds: PropTypes.bool,
   }
 
   static defaultProps = {
@@ -52,6 +54,7 @@ export class DateTimePicker extends Component {
     ampm: true,
     shouldDisableDate: undefined,
     animateYearScrolling: false,
+    seconds: false,
   }
 
   state = {
@@ -100,6 +103,10 @@ export class DateTimePicker extends Component {
     this.onChange(time, isFinish, viewType.MINUTES);
   }
 
+  handleMinuteChange = (time, isFinish) => {
+    this.onChange(time, isFinish, viewType.SECONDS);
+  }
+
   render() {
     const { openView, meridiemMode } = this.state;
     const {
@@ -120,6 +127,7 @@ export class DateTimePicker extends Component {
       animateYearScrolling,
       fadeTimeout,
       classes,
+      seconds,
     } = this.props;
 
     return (
@@ -132,6 +140,7 @@ export class DateTimePicker extends Component {
           onOpenViewChange={this.handleViewChange}
           utils={utils}
           ampm={ampm}
+          seconds={seconds}
         />
 
         {
@@ -194,6 +203,18 @@ export class DateTimePicker extends Component {
             selected={openView}
           >
             <MinutesView
+              date={date}
+              onChange={this.handleMinuteChange}
+              utils={utils}
+            />
+          </View>
+
+          <View
+            timeout={fadeTimeout}
+            view={viewType.SECONDS}
+            selected={openView}
+          >
+            <SecondsView
               date={date}
               onChange={this.handleChange}
               utils={utils}
