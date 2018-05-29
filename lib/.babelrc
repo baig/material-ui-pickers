@@ -1,12 +1,13 @@
 {
   "env": {
     "test": {
-      "presets": ["es2015"],
+      "presets": ["es2015", { "modules": false }],
       "plugins": [
         "transform-object-rest-spread",
         "transform-react-jsx",
         "transform-class-properties",
         "transform-runtime",
+        "external-helpers"
       ]
     },
     "development": {
