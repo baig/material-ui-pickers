@@ -44,6 +44,31 @@ export default class BasicDateTimePicker extends PureComponent {
             showTodayButton
           />
         </div>
+
+        <div className="picker">
+          <DateTimePicker
+            seconds
+            format="MMM Do HH:mm:ss A"
+            value={selectedDate}
+            disablePast
+            onChange={this.handleDateChange}
+            label="With seconds"
+            showTodayButton
+          />
+        </div>
+
+        <div className="picker">
+          <DateTimePicker
+            ampm={false}
+            seconds
+            format="MMM Do HH:mm:ss A"
+            value={selectedDate}
+            disablePast
+            onChange={this.handleDateChange}
+            label="With seconds"
+            showTodayButton
+          />
+        </div>
       </Fragment>
     );
   }
